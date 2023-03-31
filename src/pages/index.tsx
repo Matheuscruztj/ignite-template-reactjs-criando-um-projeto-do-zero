@@ -33,7 +33,9 @@ export default function Home({ postsPagination, preview }: HomeProps) {
   const [posts, setPosts] = useState(postsPagination.results);
   const [nextPage, setNextPage] = useState(postsPagination.next_page);
 
-  async function loadNextPage(link?: string) {
+  async function loadNextPage(link: string | null) {
+    console.log(link);
+
     if (!link) {
       return;
     }
@@ -57,7 +59,7 @@ export default function Home({ postsPagination, preview }: HomeProps) {
           };
         });
 
-        setPosts(posts);
+        setPosts(postsResponse);
         setNextPage(data?.next_page);
       })
       .catch(function (err) {
@@ -67,7 +69,6 @@ export default function Home({ postsPagination, preview }: HomeProps) {
 
   return (
     <>
-      <head>Posts</head>
       <div className={styles.contentContainer}>
         <img className={styles.logo} src="/images/logo.svg" alt="news" />
         <div className={styles.posts}>
@@ -106,7 +107,11 @@ export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
   const prismic = getPrismicClient({});
 
   const postsResponse = await prismic.getByType('posts', {
-    pageSize: 1,
+    pageSize: 20,
+    orderings: {
+      field: 'document.first_publication_date',
+      direction: 'desc',
+    },
   });
 
   const posts = postsResponse.results.map(post => {
