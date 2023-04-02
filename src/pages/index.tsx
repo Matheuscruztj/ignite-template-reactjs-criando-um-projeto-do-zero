@@ -7,6 +7,7 @@ import { getPrismicClient } from '../services/prismic';
 
 import styles from './home.module.scss';
 import { formatDate } from '../utils/dateFormat';
+import Header from '../components/Header';
 
 interface Post {
   uid?: string;
@@ -33,9 +34,7 @@ export default function Home({ postsPagination, preview }: HomeProps) {
   const [posts, setPosts] = useState(postsPagination.results);
   const [nextPage, setNextPage] = useState(postsPagination.next_page);
 
-  async function loadNextPage(link: string | null) {
-    console.log(link);
-
+  async function loadNextPage(link: string | null): Promise<void> {
     if (!link) {
       return;
     }
@@ -70,13 +69,13 @@ export default function Home({ postsPagination, preview }: HomeProps) {
   return (
     <>
       <div className={styles.contentContainer}>
-        <img className={styles.logo} src="/images/logo.svg" alt="news" />
+        <Header />
         <div className={styles.posts}>
           {posts.map(post => (
             <Link
               className={styles.post}
               key={post.uid}
-              href={`/posts/${post.uid}`}
+              href={`/post/${post.uid}`}
             >
               <a>
                 <strong>{post.data.title}</strong>
@@ -95,9 +94,15 @@ export default function Home({ postsPagination, preview }: HomeProps) {
             </Link>
           ))}
         </div>
-        <div className={styles.btnLoad} onClick={() => loadNextPage(nextPage)}>
-          Carregar mais posts
-        </div>
+
+        {nextPage && (
+          <div
+            className={styles.btnLoad}
+            onClick={() => loadNextPage(nextPage)}
+          >
+            Carregar mais posts
+          </div>
+        )}
       </div>
     </>
   );
