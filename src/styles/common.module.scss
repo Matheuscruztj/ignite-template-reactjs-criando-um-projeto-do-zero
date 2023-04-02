@@ -1,0 +1,26 @@
+.contentContainer {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 5% 10% 0;
+}
+
+.tag-info-main {
+  display: flex;
+  padding-bottom: 5%;
+}
+.tag-info {
+    display: flex;
+    text-align: center;
+    justify-content: flex-start;
+    align-items: center;
+
+    padding: 10px 0;
+    width: 80%;
+
+    .icon {
+        height: 2rem;
+    }
+    p {
+        margin: 0 2%;
+    }
+}

@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { getPrismicClient } from '../services/prismic';
 
 import styles from './home.module.scss';
+import commonStyles from '../styles/common.module.scss';
 import { formatDate } from '../utils/dateFormat';
 import Header from '../components/Header';
 
@@ -26,11 +27,9 @@ interface PostPagination {
 
 interface HomeProps {
   postsPagination: PostPagination;
-  preview: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export default function Home({ postsPagination, preview }: HomeProps) {
+export default function Home({ postsPagination }: HomeProps): JSX.Element {
   const [posts, setPosts] = useState(postsPagination.results);
   const [nextPage, setNextPage] = useState(postsPagination.next_page);
 
@@ -68,7 +67,7 @@ export default function Home({ postsPagination, preview }: HomeProps) {
 
   return (
     <>
-      <div className={styles.contentContainer}>
+      <div className={commonStyles.contentContainer}>
         <Header />
         <div className={styles.posts}>
           {posts.map(post => (
@@ -80,12 +79,12 @@ export default function Home({ postsPagination, preview }: HomeProps) {
               <a>
                 <strong>{post.data.title}</strong>
                 <p>{post.data.subtitle}</p>
-                <div className={styles['tag-info-main']}>
-                  <div className={styles['tag-info']}>
+                <div className={commonStyles['tag-info-main']}>
+                  <div className={commonStyles['tag-info']}>
                     <FiCalendar className="icon" color="#04d361" />
                     <p>{formatDate(post.first_publication_date)}</p>
                   </div>
-                  <div className={styles['tag-info']}>
+                  <div className={commonStyles['tag-info']}>
                     <FiUser className="icon" color="#04d361" />
                     <p>{post.data.author}</p>
                   </div>
@@ -108,7 +107,7 @@ export default function Home({ postsPagination, preview }: HomeProps) {
   );
 }
 
-export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
+export const getStaticProps: GetStaticProps = async () => {
   const prismic = getPrismicClient({});
 
   const postsResponse = await prismic.getByType('posts', {
@@ -135,7 +134,6 @@ export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
 
   return {
     props: {
-      preview,
       postsPagination: {
         next_page: postsResponse?.next_page,
         results: posts,

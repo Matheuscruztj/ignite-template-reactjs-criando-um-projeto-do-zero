@@ -3,6 +3,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import { useEffect, useState } from 'react';
 import { RichText } from 'prismic-dom';
 import { useRouter } from 'next/router';
+import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
 import { getPrismicClient } from '../../services/prismic';
 
 import commonStyles from '../../styles/common.module.scss';
@@ -60,29 +61,56 @@ export default function Post({ post }: PostProps): JSX.Element {
         }, 0)
       : null;
 
+    // eslint-disable-next-line no-unused-expressions
     totalWords ? setReadTime(Math.ceil(totalWords / 200)) : setReadTime(null);
   }, [post]);
 
   return (
     <>
-      <Header />
-      {readTime && <div>{readTime} min</div>}
+      <div className={commonStyles.contentContainer}>
+        <Header />
+      </div>
 
       {post === undefined ? (
-        <div>Carregando...</div>
+        <div className={commonStyles.contentContainer}>Carregando...</div>
       ) : (
         <div>
-          <div>title: {data.title}</div>
-          <div>data: {formatDate(first_publication_date)}</div>
-          <div>
-            {contents.map((content, index) => {
-              return (
-                <div key={index}>
-                  <div>head: {content.heading}</div>
-                  <div dangerouslySetInnerHTML={{ __html: content.body }} />
+          <img
+            src={post.data.banner.url}
+            className={styles.banner}
+            alt="banner"
+          />
+          <div className={commonStyles.contentContainer}>
+            <div className={styles.title}>{data.title}</div>
+            <div className={commonStyles['tag-info-main']}>
+              <div className={commonStyles['tag-info']}>
+                <FiCalendar className="icon" color="#04d361" />
+                <p>{formatDate(post.first_publication_date)}</p>
+              </div>
+              <div className={commonStyles['tag-info']}>
+                <FiUser className="icon" color="#04d361" />
+                <p>{post.data.author}</p>
+              </div>
+              {readTime && (
+                <div className={commonStyles['tag-info']}>
+                  <FiClock className="icon" color="#04d361" />
+                  <p>{readTime} min</p>
                 </div>
-              );
-            })}
+              )}
+            </div>
+            <div>
+              {contents.map((content, index) => {
+                return (
+                  <div className={styles.content}>
+                    <div className={styles.heading}>{content.heading}</div>
+                    <div
+                      className={styles.body}
+                      dangerouslySetInnerHTML={{ __html: content.body }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
@@ -97,6 +125,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const getStaticProps = async ({ params }) => {
   const { slug } = params;
 

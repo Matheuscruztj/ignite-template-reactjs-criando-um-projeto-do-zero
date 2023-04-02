@@ -1,1 +1,35 @@
-// TODO
+.banner {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}
+
+.title {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 1rem;
+  line-height: 2rem;
+  padding-bottom: 2%;
+}
+
+.content {
+  display: block;
+
+  & + .content {
+    margin-top: 5%;
+  }
+
+  .heading {
+    font-size: 1.5rem;
+    padding: 1% 0;
+    font-weight: 600;
+  }
+
+  .body {
+    padding: 1% 0;
+    font-size: 1rem;
+    font-weight: 400;
+  }
+}
+
